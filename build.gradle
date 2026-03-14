@@ -1,0 +1,48 @@
+plugins {
+  id 'java'
+  id 'application'
+}
+
+group = 'com.loganalyzer'
+version = '1.0.0'
+
+java {
+  sourceCompatibility = JavaVersion.VERSION_17
+  targetCompatibility = JavaVersion.VERSION_17
+}
+
+application {
+  mainClass = 'com.loganalyzer.App'
+}
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  implementation 'info.picocli:picocli:4.7.5'
+  annotationProcessor 'info.picocli:picocli-codegen:4.7.5'
+
+  implementation 'com.fasterxml.jackson.core:jackson-databind:2.16.1'
+  implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.16.1'
+
+  implementation 'org.slf4j:slf4j-api:2.0.11'
+  implementation 'ch.qos.logback:logback-classic:1.4.14'
+
+  testImplementation 'org.junit.jupiter:junit-jupiter:5.10.1'
+  testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.named('test') {
+  useJUnitPlatform()
+}
+
+jar {
+  manifest {
+    attributes 'Main-Class': 'com.loganalyzer.App'
+  }
+  duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+  from {
+    configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+  }
+}
